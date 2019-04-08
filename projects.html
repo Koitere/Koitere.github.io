@@ -20,9 +20,38 @@
     <!-- TODO: Find a background image -->
   </header>
 
-<section>
+<section class="sect-proj-main">
   <h1>
     Projects </h1>
+    <h2>Computer Graphics Final Project - Spring 2019</h2>
+
+  <div class="row">
+    <div class="column">
+      <img src="robotgame1.png" style="width:100%" onclick="imageGal(this);" alt="OpenGl Based">
+    </div>
+    <div class="column">
+      <img src="robotgame2.png" style="width:100%" onclick="imageGal(this);" alt="Head Rotation!">
+    </div>
+    <div class="column">
+      <img src="robotgame3.png" style="width:100%" onclick="imageGal(this);" alt="Toggle-able Camera Angles!">
+    </div>
+    <div class="column">
+      <img src="robotgame4.png" style="width:100%" onclick="imageGal(this);" alt="Destroyable Buildings!">
+    </div>
+  </div>
+
+  <p class="robot-desc">Image Gallery (Click to expand)</p>
+
+  <div class="container-gall">
+    <span onClick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+    <img id="bigImage" style="width:100%">
+    <div id="imgtext"></div>
+  </div>
+
+  <p class="robot-desc">OpenGL based project made for Computer Graphics class. Boasts feature such as: Freely cruise through the city; turning at road intersections, Multiple toggle-able camera
+     angles (9 total), Destroyable buildings with different
+     durabilities (click to destroy), Random building generation for a different 20x20 block city every time, Head Rotation, Game Pausing, Easy to add new buildings in the future.</p>
+
   </section>
 
   <footer class="main-footer">
@@ -43,5 +72,16 @@
       </u1>
     </div>
   </footer>
+
+  <script>
+  function imageGal(imgs) {
+    var bigImg = document.getElementById("bigImage");
+    var imgText = document.getElementById("imgtext")
+    bigImg.src = imgs.src;
+    imgText.innerHTML = imgs.alt;
+    bigImg.parentElement.style.display = "block";
+  }
+  </script>
+
 </body>
 </html>
