@@ -184,6 +184,37 @@ padding-bottom: 10px;
 }
 
 .index-sect {
-  background-color: rgba(0, 0, 0, 0.3);
-  padding-left: 48%;
+  display: block;
+  background-color: rgba(0, 0, 0, .6);
+  background-image: url("bkg.jpg");
+  background-blend-mode: multiply;
+  border-top: 2px solid white;
+  border-bottom: 2px solid white;
+
+  padding-top: 18%;
+  padding-bottom: 18%;
+}
+
+.btnView {
+  text-align: center;
+  vertical-align: middle;
+  padding: .67em .67em;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  border: 2px solid rgba(0, 0, 0, .6);
+  background-color: rgba(255, 255, 255, .1);
+  border-radius: 10px;
+  font-size: 1.5em;
+  font-weight: lighter;
+  width:50%;
+}
+
+.btnView-form {
+  text-align: center;
+}
+
+.btnView:hover {
+  background: rgba(255, 255, 255, .3);
 }
