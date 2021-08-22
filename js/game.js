@@ -28,7 +28,6 @@ var game = new Phaser.Game(config);
 // load assets
 function preload(){
   // load images
-  this.load.image('player', '/assets/player.png');
   this.load.image('test','/assets/spirte_sheet.png');
   this.load.spritesheet('ssmain', '/assets/spirte_sheet.png', {frameWidth: 32, frameHeight: 32});
 
@@ -92,13 +91,15 @@ function create() {
 
 
  map = this.add.tilemap(null,32,32,50,50,newmap);
+ map.setCollision(18, true);
+ map.setCollision([8,12,13],false);
  tiles = map.addTilesetImage(null,'test', 32,32);
  layer = map.createLayer('layer', tiles, 0, 0);
  rt = this.add.renderTexture(0,0,16384,16384);
  rt.draw(layer);
  player = this.physics.add.sprite(64,64,'ssmain',2);
  player.setOrigin(0.5, 0.5).setDisplaySize(32, 32).setCollideWorldBounds(true).setDrag(1000, 1000);
-
+ this.physics.add.collider(player, layer);
 };
 
 // Ensures sprite speed doesnt exceed maxVelocity while update is called
