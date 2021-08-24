@@ -95,7 +95,7 @@ function create() {
  map.setCollision([8,12,13],false);
  tiles = map.addTilesetImage(null,'test', 32,32);
  layer = map.createLayer('layer', tiles, 0, 0);
- rt = this.add.renderTexture(0,0,16384,16384);
+ rt = this.add.renderTexture(0,0,4096,4096);
  rt.draw(layer);
  player = this.physics.add.sprite(64,64,'ssmain',2);
  player.setOrigin(0.5, 0.5).setDisplaySize(32, 32).setCollideWorldBounds(true).setDrag(1000, 1000);
