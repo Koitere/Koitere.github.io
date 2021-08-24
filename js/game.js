@@ -182,9 +182,9 @@ function convertMap(rawmap) {
   {
     for (let x = 0; x < 512; x++)
     {
-      if (rawmap[x][y] >= 0.3) {
+      if (rawmap[x][y] >= 0.45) {
         newmap[x][y] = 12;
-      } else if ((rawmap[x][y] > 0) && (rawmap[x][y] < 0.3)) {
+      } else if ((rawmap[x][y] > 0) && (rawmap[x][y] < 0.45)) {
         newmap[x][y] = 13;
       } else if ((rawmap[x][y] < 0) && (rawmap[x][y] > -0.3)) {
         newmap[x][y] = 8;
@@ -193,7 +193,49 @@ function convertMap(rawmap) {
       }
     }
   }
-  return newmap;
+  edgemap = createArray(512,512);
+  for (let y = 0; y < 512; y++)
+  {
+    for (let x = 0; x < 512; x++)
+    {
+      if (newmap[x][y] == 13) {
+        if((x == 0 || x == 511 || y == 0 || y == 512 )) {
+          edgemap[x][y] = 13
+          continue;
+        }
+        if((newmap[x][y+1] == 8) && (newmap[x+1][y] == 13) && (newmap[x-1][y] == 13)) {
+          edgemap[x][y] = 25; //flat bottom ???
+        } else if ((newmap[x+1][y] == 8) && (newmap[x-1][y] == 13) && (newmap[x][y+1] == 8)) {
+          edgemap[x][y] = 23;
+        } else if ((newmap[x][y-1] == 13) && (newmap[x][y+1] == 13) && (newmap[x+1][y] == 8)) {
+          edgemap[x][y] = 24; //flat bottom
+        } else if ((newmap[x][y+1] == 13) && (newmap[x+1][y] == 13) && (newmap[x+1][y+1] == 8)) {
+          edgemap[x][y] = 26;
+        } else if ((newmap[x][y-1] == 8) && (newmap[x-1][y] == 13) && (newmap[x+1][y] == 8)){
+          edgemap[x][y] = 29;
+        } else if ((newmap[x][y-1] == 8) && (newmap[x+1][y] == 13) && (newmap[x-1][y] == 13)) {
+          edgemap[x][y] = 28;
+        } else if ((newmap[x][y-1] == 13) && (newmap[x+1][y] == 13) && (newmap[x+1][y-1] == 8)) {
+          edgemap[x][y] = 27;
+        } else if ((newmap[x][y-1] == 8) && (newmap[x+1][y] == 13) && (newmap[x-1][y] == 8)) {
+          edgemap[x][y] = 30;
+        } else if ((newmap[x][y+1] == 8) && (newmap[x+1][y] == 13) && (newmap[x-1][y] == 8)) {
+          edgemap[x][y] = 31;
+        } else if ((newmap[x-1][y] == 13) && (newmap[x][y+1] == 13) && (newmap[x-1][y+1] == 8)) {
+          edgemap[x][y] = 32;
+        } else if ((newmap[x][y-1] == 13) && (newmap[x-1][y] == 13) && (newmap[x-1][y-1] == 8)) {
+          edgemap[x][y] = 33;
+        } else if ((newmap[x][y-1] == 13) && (newmap[x-1][y] == 8) && (newmap[x][y+1] == 13)) {
+          edgemap[x][y] = 34;
+        } else {
+          edgemap[x][y] = 13;
+        }
+      } else {
+        edgemap[x][y] = newmap[x][y]
+      }
+    }
+  }
+  return edgemap;
 }
 
 function update() {
