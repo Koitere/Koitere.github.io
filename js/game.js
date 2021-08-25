@@ -5,7 +5,8 @@ var config = {
     height: 800,
     scale: {
       mode: Phaser.Scale.FIT,
-      autoCenter: Phaser.Scale.CENTER_BOTH
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+      forceLandscape: false
     },
     physics: {
       default: 'arcade',
@@ -24,7 +25,10 @@ var config = {
     }
 };
 if(is_touch_enabled()) {
-
+  config.scale.mode = Phaser.Scale.HEIGHT_CONTROLS_WIDTH;
+  config.scale.orientation = Phaser.LANDSCAPE;
+  config.width = 800;
+  config.height = 340;
 }
 
 var game = new Phaser.Game(config);
