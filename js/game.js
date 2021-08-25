@@ -2,9 +2,9 @@ var config = {
     type: Phaser.AUTO,
     parent: 'layer2',
     width: 1280,
-    height: 1280,
+    height: 880,
     scale: {
-      mode: Phaser.Scale.FIT,
+      mode: Phaser.Scale.RESIZE,
       autoCenter: Phaser.Scale.CENTER_BOTH
     },
     physics: {
@@ -30,7 +30,7 @@ function preload(){
   // load images
   this.load.image('test','/assets/spirte_sheet.png');
   this.load.spritesheet('ssmain', '/assets/spirte_sheet.png', {frameWidth: 32, frameHeight: 32});
-
+  //this.load.multiatlas('ssmain', 'assets/sprites.json', 'assets');
 };
 
 var map;
@@ -95,7 +95,7 @@ function create() {
  map = this.add.tilemap(null,32,32,50,50,newmap);
  map.setCollision(18, true);
  map.setCollision([8,12,13],false);
- tiles = map.addTilesetImage(null,'test', 32,32);
+ tiles = map.addTilesetImage(null,'ssmain', 32, 32);
  layer = map.createLayer('layer', tiles, 0, 0);
  rt = this.add.renderTexture(0,0,4096,4096);
  rt.draw(layer);
