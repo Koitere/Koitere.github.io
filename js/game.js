@@ -289,6 +289,50 @@ if (keys.W.isDown) {
 } else if (is_touch_enabled()) {
   player.setVelocityX(joy.GetX()*3);
   player.setVelocityY(-joy.GetY()*3);
+  switch(joy.GetDir()) {
+    case "N":
+      if(facing == 0){
+        facing = 2;
+      } else if (facing == 1) {
+        facing = 3;
+      }
+      break;
+    case "E":
+      if(facing == 0){
+        facing = 1;
+      } else if (facing == 2) {
+        facing = 3;
+      }
+      break;
+    case "SE":
+      facing = 1;
+      break;
+    case "NE":
+      facing = 3;
+      break;
+    case "S":
+      if(facing == 2){
+        facing = 0;
+      } else if (facing == 3) {
+        facing = 1;
+      }
+      break;
+    case "W":
+      if(facing == 1){
+        facing = 0;
+      } else if (facing == 3) {
+        facing = 2;
+      }
+      break;
+    case "SW":
+      facing = 0;
+      break;
+    case "NW":
+      facing = 2;
+      break;
+    default:
+      break;
+  }
 }
   // Constrain velocity of player
   // Camera follows player ( can be set in create )
