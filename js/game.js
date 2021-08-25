@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.AUTO,
-    parent: 'phaser-example',
-    width: 2560,
+    parent: 'layer2',
+    width: 1280,
     height: 1280,
     scale: {
       mode: Phaser.Scale.FIT,
@@ -32,6 +32,7 @@ function preload(){
   this.load.spritesheet('ssmain', '/assets/spirte_sheet.png', {frameWidth: 32, frameHeight: 32});
 
 };
+
 var map;
 var layer;
 var layer1;
@@ -41,7 +42,7 @@ var marker;
 var rt;
 var currentTile = 0;
 var currentLayer;
-
+var joy;
 var cursors;
 
 var facing = 1;
@@ -81,8 +82,9 @@ function create() {
   let gameW = this.sys.game.config.width;
   let gameH = this.sys.game.config.height;
 
-
-
+  if(is_touch_enabled()) {
+    joy = new JoyStick('layer1',{width:200,height:200});
+  }
   keys = this.input.keyboard.addKeys("W,A,S,D");
 
   osi = new OSimplex(Math.floor(Math.random() * (2**32)));
@@ -174,6 +176,12 @@ function walkAnim() {
       player.play('rightb', true);
       break;
   }
+}
+
+function is_touch_enabled() {
+    return ( 'ontouchstart' in window ) ||
+           ( navigator.maxTouchPoints > 0 ) ||
+           ( navigator.msMaxTouchPoints > 0 );
 }
 
 function convertMap(rawmap) {
@@ -271,6 +279,9 @@ if (keys.W.isDown) {
     facing = 1;
   }
   player.setVelocityY(300);
+} else if (is_touch_enabled()) {
+  player.setVelocityX(joy.GetX()*3);
+  player.setVelocityY(-joy.GetY()*3);
 }
   // Constrain velocity of player
   // Camera follows player ( can be set in create )
