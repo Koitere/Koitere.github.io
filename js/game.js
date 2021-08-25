@@ -2,9 +2,9 @@ var config = {
     type: Phaser.AUTO,
     parent: 'layer2',
     width: 1280,
-    height: 880,
+    height: 800,
     scale: {
-      mode: Phaser.Scale.RESIZE,
+      mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH
     },
     physics: {
@@ -23,6 +23,9 @@ var config = {
                 }
     }
 };
+if(is_touch_enabled()) {
+
+}
 
 var game = new Phaser.Game(config);
 // load assets
