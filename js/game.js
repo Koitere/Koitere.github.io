@@ -59,7 +59,7 @@ var animconf = {
   key: 'leftb',
   frames: [{frame:0},{frame:1}],
   defaultTextureKey: 'ssmain',
-  frameRate: 3,
+  frameRate: 2,
   repeat: -1
 };
 // called once after the preload ends
@@ -72,7 +72,7 @@ function create() {
   lframes = [{frame:1},{frame:0},{frame:2},{frame:0}];
   animconf.frames = lframes;
   animconf.key = 'left';
-  animconf.frameRate = 2;
+  animconf.frameRate = 6;
   animconf.defaultTextureKey = 'char';
   this.anims.create(animconf)
 
