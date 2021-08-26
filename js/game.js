@@ -36,7 +36,9 @@ var game = new Phaser.Game(config);
 function preload(){
   // load images
   this.load.image('test','/assets/spirte_sheet.png');
+  this.load.spritesheet('rchar', 'assets/hairv2-sheet.png', {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('ssmain', '/assets/spirte_sheet.png', {frameWidth: 32, frameHeight: 32});
+  this.load.spritesheet('char', 'assets/hairv2-sheet.png', {frameWidth: 32, frameHeight: 32});
   //this.load.multiatlas('ssmain', 'assets/sprites.json', 'assets');
 };
 
@@ -54,10 +56,10 @@ var cursors;
 
 var facing = 1;
 var animconf = {
-  key: 'left',
+  key: 'leftb',
   frames: [{frame:0},{frame:1}],
   defaultTextureKey: 'ssmain',
-  frameRate: 2,
+  frameRate: 3,
   repeat: -1
 };
 // called once after the preload ends
@@ -65,17 +67,24 @@ function create() {
   // Create world bounds
   this.physics.world.setBounds(0, 0, 16384, 16384);
   this.cameras.main.zoom = 1;
+  this.anims.create(animconf)
 
-  this.anims.create(animconf)
-  animconf.frames = [{frame:2},{frame:3}];
-  animconf.key = 'right';
+  lframes = [{frame:1},{frame:0},{frame:2},{frame:0}];
+  animconf.frames = lframes;
+  animconf.key = 'left';
   animconf.frameRate = 2;
+  animconf.defaultTextureKey = 'char';
   this.anims.create(animconf)
+
   animconf.frames = [{frame:6},{frame:7}];
+  animconf.defaultTextureKey = 'ssmain';
   animconf.key = 'rightb';
   this.anims.create(animconf)
-  animconf.frames = [{frame:4},{frame:5}];
-  animconf.key = 'leftb';
+
+  animconf.defaultTextureKey = 'char';
+  animconf.key = 'right';
+  rframes = [{frame:4},{frame:5},{frame:3},{frame:5}];
+  animconf.frames = rframes;
   this.anims.create(animconf)
 
 
@@ -106,7 +115,7 @@ function create() {
  layer = map.createLayer('layer', tiles, 0, 0);
  rt = this.add.renderTexture(0,0,4096,4096);
  rt.draw(layer);
- player = this.physics.add.sprite(64,64,'ssmain',2);
+ player = this.physics.add.sprite(64,64,'char',5);
  player.setOrigin(0.5, 0.5).setDisplaySize(32, 32).setCollideWorldBounds(true).setDrag(1000, 1000);
  this.physics.add.collider(player, layer);
 };
@@ -177,10 +186,12 @@ function walkAnim() {
       player.play('right', true);
       break;
     case 2:
-      player.play('leftb',true);
+      player.stop();
+      player.setFrame(0);
       break;
     case 3:
-      player.play('rightb', true);
+      player.stop();
+      player.setFrame(5);
       break;
   }
 }
@@ -255,84 +266,71 @@ function convertMap(rawmap) {
 
 function update() {
   player.setVelocity(0);
-
-if (keys.A.isDown) {
-  if(facing == 1){
-    facing = 0;
-  } else if (facing == 3) {
-    facing = 2;
-  }
-  player.setVelocityX(-300);
-} else if (keys.D.isDown) {
-  if(facing == 0){
-    facing = 1;
-  } else if (facing == 2) {
-    facing = 3;
-  }
-  player.setVelocityX(300);
-}
-
-if (keys.W.isDown) {
-  if(facing == 0){
-    facing = 2;
-  } else if (facing == 1) {
-    facing = 3;
-  }
-  player.setVelocityY(-300);
-} else if (keys.S.isDown) {
-  if(facing == 2){
-    facing = 0;
-  } else if (facing == 3) {
-    facing = 1;
-  }
-  player.setVelocityY(300);
-} else if (is_touch_enabled()) {
-  player.setVelocityX(joy.GetX()*3);
-  player.setVelocityY(-joy.GetY()*3);
-  switch(joy.GetDir()) {
-    case "N":
-      if(facing == 0){
-        facing = 2;
-      } else if (facing == 1) {
-        facing = 3;
-      }
-      break;
-    case "E":
-      if(facing == 0){
+  if (is_touch_enabled()) {
+    player.setVelocityX(joy.GetX()*3);
+    player.setVelocityY(-joy.GetY()*3);
+    switch(joy.GetDir()) {
+      case "N":
+        break;
+      case "E":
         facing = 1;
-      } else if (facing == 2) {
-        facing = 3;
-      }
-      break;
-    case "SE":
-      facing = 1;
-      break;
-    case "NE":
-      facing = 3;
-      break;
-    case "S":
-      if(facing == 2){
-        facing = 0;
-      } else if (facing == 3) {
+        break;
+      case "SE":
         facing = 1;
-      }
-      break;
-    case "W":
-      if(facing == 1){
+        break;
+      case "NE":
+        facing = 1;
+        break;
+      case "S":
+        break;
+      case "W":
         facing = 0;
-      } else if (facing == 3) {
-        facing = 2;
-      }
-      break;
-    case "SW":
+        break;
+      case "SW":
+        facing = 0;
+        break;
+      case "NW":
+        facing = 0;
+        break;
+      default:
+        if(facing == 0) {
+          facing = 2;
+        } else if(facing == 1) {
+          facing = 3;
+        }
+        break;
+    }
+  } else {
+    if (keys.A.isDown) {
       facing = 0;
-      break;
-    case "NW":
-      facing = 2;
-      break;
-    default:
-      break;
-  }
+      player.setVelocityX(-300);
+    } else if (keys.D.isDown) {
+      facing = 1;
+      player.setVelocityX(300);
+    } else {
+      if(facing == 0) {
+        facing = 2;
+      } else if(facing == 1) {
+        facing = 3;
+      }
+    }
+
+    if (keys.W.isDown) {
+      if(facing == 2) {
+        facing = 0;
+      } else if (facing == 3) {
+        facing = 1;
+      }
+      player.setVelocityY(-300);
+    } else if (keys.S.isDown) {
+      if(facing == 2) {
+        facing = 0;
+      } else if (facing == 3){
+        facing = 1;
+      }
+      player.setVelocityY(300);
+
+    }
 }
   // Constrain velocity of player
   // Camera follows player ( can be set in create )
