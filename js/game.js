@@ -30,7 +30,8 @@ if(is_touch_enabled()) {
   config.width = 800;
   config.height = 340;
 }
-
+var gameVersion = "v0.1.0alpha"
+console.log("Game Version = " + gameVersion);
 var game = new Phaser.Game(config);
 // load assets
 function preload(){
@@ -72,7 +73,7 @@ function create() {
   lframes = [{frame:1},{frame:0},{frame:2},{frame:0}];
   animconf.frames = lframes;
   animconf.key = 'left';
-  animconf.frameRate = 6;
+  animconf.frameRate = 4;
   animconf.defaultTextureKey = 'char';
   this.anims.create(animconf)
 
