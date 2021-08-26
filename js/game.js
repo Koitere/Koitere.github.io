@@ -30,8 +30,9 @@ if(is_touch_enabled()) {
   config.width = 800;
   config.height = 340;
 }
-var gameVersion = "v0.1.0alpha"
+var gameVersion = "v0.1.1alpha"
 console.log("Game Version = " + gameVersion);
+//possible game name... Mountaineer? Something like that
 var game = new Phaser.Game(config);
 // load assets
 function preload(){
@@ -272,6 +273,11 @@ function update() {
     player.setVelocityY(-joy.GetY()*3);
     switch(joy.GetDir()) {
       case "N":
+      if(facing == 2) {
+        facing = 0;
+      } else if(facing == 3) {
+        facing = 1;
+      }
         break;
       case "E":
         facing = 1;
@@ -283,6 +289,11 @@ function update() {
         facing = 1;
         break;
       case "S":
+        if(facing == 2) {
+          facing = 0;
+        } else if(facing == 3) {
+          facing = 1;
+        }
         break;
       case "W":
         facing = 0;
