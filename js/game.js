@@ -30,7 +30,7 @@ if(is_touch_enabled()) {
   config.width = 800;
   config.height = 340;
 }
-var gameVersion = "v0.1.1alpha"
+var gameVersion = "v0.1.2-alpha"
 console.log("Game Version = " + gameVersion);
 //possible game name... Mountaineer? Something like that
 var game = new Phaser.Game(config);
@@ -38,7 +38,7 @@ var game = new Phaser.Game(config);
 function preload(){
   // load images
   this.load.image('test','/assets/spirte_sheet.png');
-  this.load.spritesheet('rchar', 'assets/hairv2-sheet.png', {frameWidth: 32, frameHeight: 32});
+  this.load.spritesheet('upchar', 'assets/upwalk.png', {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('ssmain', '/assets/spirte_sheet.png', {frameWidth: 32, frameHeight: 32});
   this.load.spritesheet('char', 'assets/hairv2-sheet.png', {frameWidth: 32, frameHeight: 32});
   //this.load.multiatlas('ssmain', 'assets/sprites.json', 'assets');
@@ -54,6 +54,7 @@ var rt;
 var currentTile = 0;
 var currentLayer;
 var joy;
+var moving = false;
 var cursors;
 
 var facing = 1;
@@ -76,6 +77,13 @@ function create() {
   animconf.key = 'left';
   animconf.frameRate = 4;
   animconf.defaultTextureKey = 'char';
+  this.anims.create(animconf)
+
+  lframes = [{frame:0},{frame:1},{frame:2},{frame:0},{frame:3},{frame:4}];
+  animconf.frames = lframes;
+  animconf.key = 'up';
+  animconf.frameRate = 6;
+  animconf.defaultTextureKey = 'upchar';
   this.anims.create(animconf)
 
   animconf.frames = [{frame:6},{frame:7}];
@@ -182,14 +190,28 @@ function generatemap(noise) {
 function walkAnim() {
   switch(facing) {
     case 0:
-      player.play('left', true);
+      if(moving) {
+        player.play('left', true);
+      } else {
+        player.stop();
+        player.setFrame(0);
+      }
       break;
     case 1:
+    if(moving) {
       player.play('right', true);
+    } else {
+      player.stop();
+      player.setFrame(5);
+    }
       break;
     case 2:
+    if(moving) {
+      player.play('up', true);
+    } else {
       player.stop();
       player.setFrame(0);
+    }
       break;
     case 3:
       player.stop();
@@ -204,6 +226,7 @@ function is_touch_enabled() {
            ( navigator.msMaxTouchPoints > 0 );
 }
 
+var edgeHash = {"111111010":13,"111010010":8,"010010000":8,"011111000":13,"001011000":8,"110111110":13,"100110100":8,"001111011":13,"100111001":8,"110111000":13,"110110010":13,"010111111":13};
 function convertMap(rawmap) {
   newmap = createArray(512,512);
   for (let y = 0; y < 512; y++)
@@ -262,6 +285,37 @@ function convertMap(rawmap) {
         edgemap[x][y] = newmap[x][y]
       }
     }
+
+  }
+  for (let y = 0; y < 128; y++)
+  {
+    for (let x = 0; x < 128; x++)
+    {
+      if (newmap[x][y] == 13) {
+        if((x == 0 || x == 511 || y == 0 || y == 512 )) {
+          edgemap[x][y] = 13
+          continue;
+        }
+        let checkhash = ""
+        for (let i = -1; i < 2; i++) {
+          for (let ii = -1; ii < 2; ii++) {
+            if (newmap[x+i][y+ii]==8){
+              checkhash += "0";
+            } else {
+              checkhash += "1";
+            }
+          }
+        }
+        try {
+          if((checkhash in edgeHash)) {
+            edgemap[x][y] = edgeHash[checkhash]
+            console.log(edgeHash[checkhash], " ", x, " ", y);
+          }
+        } catch(error) {
+          continue;
+        }
+      }
+    }
   }
   return edgemap;
 }
@@ -273,75 +327,79 @@ function update() {
     player.setVelocityY(-joy.GetY()*3);
     switch(joy.GetDir()) {
       case "N":
-      if(facing == 2) {
-        facing = 0;
-      } else if(facing == 3) {
-        facing = 1;
-      }
+        facing = 2;
+        moving = true;
         break;
       case "E":
         facing = 1;
+        moving = true;
         break;
       case "SE":
         facing = 1;
+        moving = true;
         break;
       case "NE":
         facing = 1;
+        moving = true;
         break;
       case "S":
-        if(facing == 2) {
-          facing = 0;
-        } else if(facing == 3) {
-          facing = 1;
-        }
+        facing = 0;
+        moving = true;
         break;
       case "W":
         facing = 0;
+        moving = true;
         break;
       case "SW":
         facing = 0;
+        moving = true;
         break;
       case "NW":
         facing = 0;
+        moving = true;
         break;
       default:
-        if(facing == 0) {
-          facing = 2;
-        } else if(facing == 1) {
-          facing = 3;
-        }
+        moving = false;
         break;
     }
   } else {
+    /*
     if (keys.A.isDown) {
+      moving = true;
       facing = 0;
       player.setVelocityX(-300);
     } else if (keys.D.isDown) {
+      moving = true;
       facing = 1;
       player.setVelocityX(300);
     } else {
-      if(facing == 0) {
-        facing = 2;
-      } else if(facing == 1) {
-        facing = 3;
-      }
-    }
+      moving = false;
+    }*/
 
     if (keys.W.isDown) {
-      if(facing == 2) {
-        facing = 0;
-      } else if (facing == 3) {
-        facing = 1;
-      }
+      moving = true;
+      facing = 2;
       player.setVelocityY(-300);
     } else if (keys.S.isDown) {
-      if(facing == 2) {
+      moving = true;
+      if(facing == 0) {
         facing = 0;
-      } else if (facing == 3){
+      } else {
         facing = 1;
       }
       player.setVelocityY(300);
+    } else {
+      moving = false;
+    }
 
+    if (keys.A.isDown) {
+      moving = true;
+      facing = 0;
+      player.setVelocityX(-300);
+    } else if (keys.D.isDown) {
+      moving = true;
+      facing = 1;
+      player.setVelocityX(300);
     }
 }
   // Constrain velocity of player
